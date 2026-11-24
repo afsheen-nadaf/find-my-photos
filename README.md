@@ -1,41 +1,22 @@
 # Find My Photos
 
-Serverless event album on AWS: upload event photos, then find yourself with a selfie.
-Lambda (Python 3.12) + S3 + DynamoDB + API Gateway + Rekognition, defined in AWS SAM.
+Serverless event album on AWS: upload event photos, then find yourself with a selfie or search by natural-language description.
+Built with AWS Lambda (Python 3.12), S3, DynamoDB (with Streams), API Gateway, Amazon Rekognition, and Google Gemini Embeddings (`gemini-embedding-001`), defined in AWS SAM.
 
 ## Handlers
 | Function | Trigger | Job |
 |---|---|---|
-| GetUploadUrl | POST /upload-url | Presigned S3 upload URL |
-| IndexPhoto | S3 ObjectCreated (originals/) | Rekognition IndexFaces, save record |
-| Thumbnail | DynamoDB Stream (INSERT) | Create thumbnail with Pillow |
-| ListPhotos | GET /photos | Gallery with signed thumbnail URLs |
-| FindMyPhotos | POST /search | SearchFacesByImage, return matching photos |
-| EmbedPhoto | DynamoDB Stream (MODIFY, once the thumbnail exists) | Titan multimodal embedding + Rekognition labels, stored on the record |
-| TextSearch | POST /search-text | Embed the text query, rank photos by cosine similarity (`semantic`, `keyword` baseline or `hybrid`) |
+| GetUploadUrl | POST /upload-url | Generate presigned S3 upload URL |
+| IndexPhoto | S3 ObjectCreated (`originals/`) | Run Rekognition `IndexFaces`, save initial record in DynamoDB |
+| Thumbnail | DynamoDB Stream (INSERT) | Create 480px JPEG thumbnail with Pillow |
+| EmbedPhoto | DynamoDB Stream (MODIFY, once thumbnail exists) | Extract Rekognition `DetectLabels` tags and generate 384-dim `gemini-embedding-001` (`RETRIEVAL_DOCUMENT`) vector |
+| TextSearch | POST /search-text | Embed text query (`RETRIEVAL_QUERY`) and rank photos using weighted Reciprocal Rank Fusion (`hybrid`, `semantic`, or `keyword`) |
+| ListPhotos | GET /photos | Return album gallery with signed thumbnail URLs |
+| FindMyPhotos | POST /search | Run Rekognition `SearchFacesByImage` to return matching photos for a selfie |
 
-## Search by description and evaluation
-`POST /search-text` takes `{"query": "...", "k": 12, "mode": "semantic"}`. To measure it, label queries in
-`eval/label.html`, save `eval/queries.json`, then run `python3 eval/eval_search.py`: it compares embeddings
-with a Rekognition-label keyword baseline on recall@k, hit@k and MRR. Offline tests: `python3 -I tests/test_upgrade.py`.
-See UPGRADE.md for the redeploy steps.
+## Search by Description & Evaluation
+`POST /search-text` accepts `{"query": "...", "k": 12, "mode": "hybrid"}` (defaulting to weighted `hybrid` fusion combining semantic cosine similarity and Rekognition label matching).
 
-## Deploy
-Prereqs: AWS CLI (configured, in a region where Rekognition is available), SAM CLI, Docker.
-
-    ./deploy.sh            # build, deploy, upload frontend, prints the site URL
-
-No Docker? Install Lambda-compatible Pillow into the function folder, then build without the container:
-
-    rm src/thumbnail/requirements.txt
-    pip install --platform manylinux2014_x86_64 --target src/thumbnail \
-        --implementation cp --python-version 3.12 --only-binary=:all: Pillow
-    sam build   # then run the sam deploy / frontend steps from deploy.sh
-
-## Tear down (do this after recording)
-    ./teardown.sh          # empties buckets, deletes the stack and the face collection
-
-## Notes
-- Set an AWS Budget alarm (for example, $5) before you start.
-- Skip reserved concurrency on a new account; its low quota can reject the setting.
-- Only use photos of people who agreed to be in the demo.
+* **Retrieval Benchmark:** Label ground-truth queries in `eval/label.html`, save to `eval/queries.json`, and run:
+  ```bash
+  python3 eval/eval_search.py --k 5
