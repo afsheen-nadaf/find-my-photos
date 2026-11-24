@@ -1,0 +1,248 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Transform: AWS::Serverless-2016-10-31
+Description: Find My Photos - serverless face-search event album with semantic text search
+
+Parameters:
+  GeminiApiKey:
+    Type: String
+    NoEcho: true
+    Description: Free Google AI Studio API key for gemini-embedding-001
+  EmbedModelId:
+    Type: String
+    Default: gemini-embedding-001
+  EmbedDims:
+    Type: String
+    Default: "384"
+
+Globals:
+  Function:
+    Runtime: python3.12
+    Timeout: 30
+    MemorySize: 512
+    Environment:
+      Variables:
+        BUCKET: !Sub "fmp-photos-${AWS::AccountId}-${AWS::Region}"
+        TABLE: !Ref PhotosTable
+        COLLECTION_ID: !Sub "${AWS::StackName}-faces"
+        GEMINI_API_KEY: !Ref GeminiApiKey
+        EMBED_MODEL_ID: !Ref EmbedModelId
+        EMBED_DIMS: !Ref EmbedDims
+
+Resources:
+  # ---------- Storage and face collection ----------
+  FaceCollection:
+    Type: AWS::Rekognition::Collection
+    Properties:
+      CollectionId: !Sub "${AWS::StackName}-faces"
+
+  PhotosBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub "fmp-photos-${AWS::AccountId}-${AWS::Region}"
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
+      CorsConfiguration:
+        CorsRules:
+          - AllowedMethods: [PUT, GET]
+            AllowedOrigins: ["*"]
+            AllowedHeaders: ["*"]
+            MaxAge: 3000
+
+  PhotosTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+        - AttributeName: photo_id
+          AttributeType: S
+      KeySchema:
+        - AttributeName: photo_id
+          KeyType: HASH
+      StreamSpecification:
+        StreamViewType: NEW_IMAGE
+
+  # ---------- API ----------
+  HttpApi:
+    Type: AWS::Serverless::HttpApi
+    Properties:
+      CorsConfiguration:
+        AllowOrigins: ["*"]
+        AllowMethods: [GET, POST, OPTIONS]
+        AllowHeaders: [Content-Type]
+
+  # ---------- Handlers ----------
+  GetUploadUrlFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: src/get_upload_url/
+      Handler: app.handler
+      Policies:
+        - S3WritePolicy:
+            BucketName: !Sub "fmp-photos-${AWS::AccountId}-${AWS::Region}"
+      Events:
+        Api:
+          Type: HttpApi
+          Properties: { ApiId: !Ref HttpApi, Path: /upload-url, Method: POST }
+
+  IndexPhotoFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: src/index_photo/
+      Handler: app.handler
+      Timeout: 60
+      Policies:
+        - S3ReadPolicy:
+            BucketName: !Sub "fmp-photos-${AWS::AccountId}-${AWS::Region}"
+        - DynamoDBWritePolicy:
+            TableName: !Ref PhotosTable
+        - DynamoDBReadPolicy:
+            TableName: !Ref PhotosTable
+        - Statement:
+            - Effect: Allow
+              Action: rekognition:IndexFaces
+              Resource: !Sub "arn:aws:rekognition:${AWS::Region}:${AWS::AccountId}:collection/${AWS::StackName}-faces"
+      Events:
+        Upload:
+          Type: S3
+          Properties:
+            Bucket: !Ref PhotosBucket
+            Events: s3:ObjectCreated:*
+            Filter:
+              S3Key:
+                Rules:
+                  - Name: prefix
+                    Value: originals/
+
+  ThumbnailFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: src/thumbnail/
+      Handler: app.handler
+      Timeout: 60
+      Policies:
+        - S3CrudPolicy:
+            BucketName: !Sub "fmp-photos-${AWS::AccountId}-${AWS::Region}"
+        - DynamoDBCrudPolicy:
+            TableName: !Ref PhotosTable
+      Events:
+        Stream:
+          Type: DynamoDB
+          Properties:
+            Stream: !GetAtt PhotosTable.StreamArn
+            StartingPosition: LATEST
+            BatchSize: 5
+            FilterCriteria:
+              Filters:
+                - Pattern: '{"eventName": ["INSERT"]}'
+
+  EmbedPhotoFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: src/embed_photo/
+      Handler: app.handler
+      Timeout: 60
+      Policies:
+        - S3ReadPolicy:
+            BucketName: !Sub "fmp-photos-${AWS::AccountId}-${AWS::Region}"
+        - DynamoDBCrudPolicy:
+            TableName: !Ref PhotosTable
+        - Statement:
+            - Effect: Allow
+              Action: rekognition:DetectLabels
+              Resource: "*"
+      Events:
+        Stream:
+          Type: DynamoDB
+          Properties:
+            Stream: !GetAtt PhotosTable.StreamArn
+            StartingPosition: LATEST
+            BatchSize: 5
+            MaximumRetryAttempts: 3
+            FilterCriteria:
+              Filters:
+                - Pattern: '{"eventName": ["MODIFY"]}'
+
+  TextSearchFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: src/text_search/
+      Handler: app.handler
+      Policies:
+        - S3ReadPolicy:
+            BucketName: !Sub "fmp-photos-${AWS::AccountId}-${AWS::Region}"
+        - DynamoDBReadPolicy:
+            TableName: !Ref PhotosTable
+      Events:
+        Api:
+          Type: HttpApi
+          Properties: { ApiId: !Ref HttpApi, Path: /search-text, Method: POST }
+
+  ListPhotosFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: src/list_photos/
+      Handler: app.handler
+      Policies:
+        - S3ReadPolicy:
+            BucketName: !Sub "fmp-photos-${AWS::AccountId}-${AWS::Region}"
+        - DynamoDBReadPolicy:
+            TableName: !Ref PhotosTable
+      Events:
+        Api:
+          Type: HttpApi
+          Properties: { ApiId: !Ref HttpApi, Path: /photos, Method: GET }
+
+  FindMyPhotosFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: src/find_my_photos/
+      Handler: app.handler
+      Policies:
+        - S3ReadPolicy:
+            BucketName: !Sub "fmp-photos-${AWS::AccountId}-${AWS::Region}"
+        - DynamoDBReadPolicy:
+            TableName: !Ref PhotosTable
+        - Statement:
+            - Effect: Allow
+              Action: rekognition:SearchFacesByImage
+              Resource: !Sub "arn:aws:rekognition:${AWS::Region}:${AWS::AccountId}:collection/${AWS::StackName}-faces"
+      Events:
+        Api:
+          Type: HttpApi
+          Properties: { ApiId: !Ref HttpApi, Path: /search, Method: POST }
+
+  # ---------- Frontend hosting ----------
+  WebBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      WebsiteConfiguration:
+        IndexDocument: index.html
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: false
+        BlockPublicPolicy: false
+        IgnorePublicAcls: false
+        RestrictPublicBuckets: false
+
+  WebBucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: !Ref WebBucket
+      PolicyDocument:
+        Statement:
+          - Effect: Allow
+            Principal: "*"
+            Action: s3:GetObject
+            Resource: !Sub "${WebBucket.Arn}/*"
+
+Outputs:
+  ApiUrl:
+    Value: !Sub "https://${HttpApi}.execute-api.${AWS::Region}.amazonaws.com"
+  SiteUrl:
+    Value: !GetAtt WebBucket.WebsiteURL
+  WebBucketName:
+    Value: !Ref WebBucket
+  PhotosBucketName:
+    Value: !Ref PhotosBucket

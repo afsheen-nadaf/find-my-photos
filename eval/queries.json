@@ -1,0 +1,119 @@
+{
+  "queries": [
+    {
+      "q": "coffee",
+      "relevant": [
+        "593f9557ff6646deb835c9c304dc4986",
+        "fac2558c19324f8f978bd44fc6062127",
+        "32370c0e24dd4699af625c99cc60ccbd"
+      ]
+    },
+    {
+      "q": "food",
+      "relevant": [
+        "3ffb1aa33c83470aa0bc8a324e143d58",
+        "0317b5cf2ded400482369e33d982b033",
+        "2ee880ce9f6a4d988e5ac67fc7284f3a",
+        "be57268bb77041cba07e6f52afbe1725",
+        "fac2558c19324f8f978bd44fc6062127",
+        "32370c0e24dd4699af625c99cc60ccbd"
+      ]
+    },
+    {
+      "q": "nature",
+      "relevant": [
+        "15765d8ee5924605b6b1b672327cc6b1"
+      ]
+    },
+    {
+      "q": "girl",
+      "relevant": [
+        "0317b5cf2ded400482369e33d982b033",
+        "7e545b8eddd4490a9122870fb121a408",
+        "f8ba19de3c0d426896907abb591e2697",
+        "9b2894c356804fce8d88394c0fa8849c",
+        "be57268bb77041cba07e6f52afbe1725",
+        "593f9557ff6646deb835c9c304dc4986",
+        "3b0424fa7560416d96f05e542cbc139e",
+        "cd76a06c7cf84447bb7ee2e35db49a96",
+        "4771be1d92004974bbc00f3482af9a89",
+        "931d56fa84e4416fbc517450187c2440",
+        "a201cf0c2c804a649a50c18f8ca8a08b",
+        "05d9a636e2934a869e136f01df112177",
+        "d414679263d44f638c70ff2f766965a1",
+        "5728dfe9e9e746b795f0080fc2617075"
+      ]
+    },
+    {
+      "q": "water",
+      "relevant": [
+        "15765d8ee5924605b6b1b672327cc6b1",
+        "be57268bb77041cba07e6f52afbe1725",
+        "fac2558c19324f8f978bd44fc6062127"
+      ]
+    },
+    {
+      "q": "thumbs up",
+      "relevant": [
+        "4d8425a04de14e03a9d0ee091d5dab9a",
+        "d414679263d44f638c70ff2f766965a1",
+        "cdffca9834c44cb09467ed75a242354b"
+      ]
+    },
+    {
+      "q": "face mask",
+      "relevant": [
+        "cdffca9834c44cb09467ed75a242354b"
+      ]
+    },
+    {
+      "q": "two girls smiling",
+      "relevant": [
+        "a201cf0c2c804a649a50c18f8ca8a08b",
+        "05d9a636e2934a869e136f01df112177",
+        "931d56fa84e4416fbc517450187c2440",
+        "593f9557ff6646deb835c9c304dc4986",
+        "9b2894c356804fce8d88394c0fa8849c",
+        "0317b5cf2ded400482369e33d982b033",
+        "7e545b8eddd4490a9122870fb121a408"
+      ]
+    },
+    {
+      "q": "books",
+      "relevant": [
+        "7e545b8eddd4490a9122870fb121a408"
+      ]
+    },
+    {
+      "q": "male wearing sunglasses",
+      "relevant": [
+        "7e545b8eddd4490a9122870fb121a408",
+        "f8ba19de3c0d426896907abb591e2697"
+      ]
+    },
+    {
+      "q": "mirror",
+      "relevant": [
+        "5728dfe9e9e746b795f0080fc2617075"
+      ]
+    },
+    {
+      "q": "striped shirt",
+      "relevant": [
+        "15765d8ee5924605b6b1b672327cc6b1",
+        "5728dfe9e9e746b795f0080fc2617075",
+        "4771be1d92004974bbc00f3482af9a89",
+        "931d56fa84e4416fbc517450187c2440",
+        "0317b5cf2ded400482369e33d982b033"
+      ]
+    },
+    {
+      "q": "bakery",
+      "relevant": [
+        "2ee880ce9f6a4d988e5ac67fc7284f3a",
+        "fac2558c19324f8f978bd44fc6062127",
+        "32370c0e24dd4699af625c99cc60ccbd"
+      ]
+    }
+  ]
+}

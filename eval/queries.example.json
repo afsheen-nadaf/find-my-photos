@@ -1,0 +1,6 @@
+{
+  "queries": [
+    { "q": "a group photo on stage", "relevant": ["replace-with-photoId-1", "replace-with-photoId-2"] },
+    { "q": "people laughing at a table", "relevant": ["replace-with-photoId-3"] }
+  ]
+}

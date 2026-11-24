@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Label search queries</title>
+<style>
+  body { font: 16px/1.5 system-ui, sans-serif; margin: 0; padding: 20px; background: #edf0f5; color: #0e1726; }
+  h1 { font-size: 1.3rem; margin: 0 0 4px; }
+  p { margin: 4px 0 12px; color: #556175; }
+  .bar { position: sticky; top: 0; z-index: 2; background: #fff; border: 1px solid #d6dce7; border-radius: 14px; padding: 12px; display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+  .bar input { flex: 1; min-width: 220px; padding: 8px 12px; font: inherit; border: 1.5px solid #b4bed1; border-radius: 10px; }
+  button { padding: 8px 14px; font: inherit; font-weight: 600; border-radius: 10px; border: 1.5px solid #2a4bff; background: #2a4bff; color: #fff; cursor: pointer; }
+  button.ghost { background: #fff; color: #2a4bff; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; margin-top: 14px; }
+  .cell { position: relative; background: #fff; border: 2px solid transparent; border-radius: 10px; overflow: hidden; cursor: pointer; }
+  .cell.on { border-color: #0f7a55; box-shadow: 0 0 0 2px #0f7a5533; }
+  .cell img { width: 100%; aspect-ratio: 1; object-fit: cover; display: block; background: #d7dce6; }
+  .cell span { display: block; padding: 4px 6px; font: 12px ui-monospace, monospace; color: #556175; }
+  .cell.on::after { content: "✓"; position: absolute; top: 6px; right: 6px; background: #0f7a55; color: #fff; width: 22px; height: 22px; border-radius: 50%; display: grid; place-items: center; font-weight: 700; }
+  ol { background: #fff; border: 1px solid #d6dce7; border-radius: 14px; padding: 12px 12px 12px 34px; margin-top: 14px; }
+  #msg { color: #b3261e; font-weight: 600; }
+</style>
+</head>
+<body>
+<h1>Label search queries</h1>
+<p>Type a description, tick every photo that really matches it, then click “Add query”. Aim for 20 to 30 queries, each with 1 to 5 matching photos. Signed image links last 15 minutes, so reload if images break.</p>
+
+<div class="bar">
+  <input id="q" placeholder="e.g. group photo on stage" autocomplete="off">
+  <button id="add">Add query</button>
+  <button id="save" class="ghost">Download queries.json</button>
+  <button id="copy" class="ghost">Copy JSON</button>
+  <span id="msg"></span>
+</div>
+
+<div class="grid" id="grid"></div>
+<ol id="list"></ol>
+
+<script src="../frontend/config.js"></script>
+<script>
+const API = String((window.CONFIG && window.CONFIG.API_URL) || "").replace(/\/$/, "");
+const queries = JSON.parse(localStorage.getItem("fmp-queries") || "[]");
+const selected = new Set();
+const $ = (id) => document.getElementById(id);
+
+function flash(text) { $("msg").textContent = text; setTimeout(() => { $("msg").textContent = ""; }, 3000); }
+function persist() { localStorage.setItem("fmp-queries", JSON.stringify(queries)); }
+
+function renderList() {
+  $("list").replaceChildren(...queries.map((item, i) => {
+    const li = document.createElement("li");
+    li.textContent = `${item.q}  (${item.relevant.length} photo${item.relevant.length === 1 ? "" : "s"}) `;
+    const del = document.createElement("button");
+    del.textContent = "remove"; del.className = "ghost";
+    del.onclick = () => { queries.splice(i, 1); persist(); renderList(); };
+    li.append(del);
+    return li;
+  }));
+}
+
+async function load() {
+  if (!API) { flash("API address missing: check frontend/config.js"); return; }
+  const { photos } = await (await fetch(API + "/photos")).json();
+  $("grid").replaceChildren(...photos.filter((p) => p.thumbUrl).map((p) => {
+    const cell = document.createElement("div");
+    cell.className = "cell";
+    cell.innerHTML = `<img loading="lazy" alt=""><span>${p.photoId.slice(0, 8)}</span>`;
+    cell.querySelector("img").src = p.thumbUrl;
+    cell.onclick = () => {
+      if (selected.has(p.photoId)) selected.delete(p.photoId); else selected.add(p.photoId);
+      cell.classList.toggle("on");
+    };
+    return cell;
+  }));
+}
+
+$("add").onclick = () => {
+  const q = $("q").value.trim();
+  if (!q) return flash("Type a description first.");
+  if (!selected.size) return flash("Tick at least one matching photo.");
+  queries.push({ q, relevant: [...selected] });
+  persist(); renderList();
+  selected.clear(); $("q").value = "";
+  document.querySelectorAll(".cell.on").forEach((c) => c.classList.remove("on"));
+};
+const asJson = () => JSON.stringify({ queries }, null, 2);
+$("save").onclick = () => {
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(new Blob([asJson()], { type: "application/json" }));
+  a.download = "queries.json"; a.click();
+};
+$("copy").onclick = async () => { await navigator.clipboard.writeText(asJson()); flash("Copied."); };
+
+renderList();
+load().catch((e) => flash("Could not load photos: " + e.message));
+</script>
+</body>
+</html>

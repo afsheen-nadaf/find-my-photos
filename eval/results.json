@@ -1,0 +1,559 @@
+{
+  "k": 5,
+  "n_queries": 13,
+  "summary": {
+    "keyword": {
+      "recall": 0.2717948717948718,
+      "hit": 0.46153846153846156,
+      "mrr": 0.35128205128205126
+    },
+    "semantic": {
+      "recall": 0.6956043956043956,
+      "hit": 0.9230769230769231,
+      "mrr": 0.8782051282051282
+    },
+    "hybrid": {
+      "recall": 0.6802197802197802,
+      "hit": 0.9230769230769231,
+      "mrr": 0.8269230769230769
+    }
+  },
+  "queries": [
+    {
+      "q": "coffee",
+      "relevant": [
+        "593f9557ff6646deb835c9c304dc4986",
+        "fac2558c19324f8f978bd44fc6062127",
+        "32370c0e24dd4699af625c99cc60ccbd"
+      ],
+      "keyword": {
+        "top": [],
+        "recall": 0.0,
+        "hit": 0.0,
+        "mrr": 0.0
+      },
+      "semantic": {
+        "top": [
+          "fac2558c19324f8f978bd44fc6062127",
+          "32370c0e24dd4699af625c99cc60ccbd",
+          "593f9557ff6646deb835c9c304dc4986",
+          "2ee880ce9f6a4d988e5ac67fc7284f3a",
+          "3ffb1aa33c83470aa0bc8a324e143d58"
+        ],
+        "recall": 1.0,
+        "hit": 1.0,
+        "mrr": 1.0
+      },
+      "hybrid": {
+        "top": [
+          "fac2558c19324f8f978bd44fc6062127",
+          "32370c0e24dd4699af625c99cc60ccbd",
+          "593f9557ff6646deb835c9c304dc4986",
+          "2ee880ce9f6a4d988e5ac67fc7284f3a",
+          "3ffb1aa33c83470aa0bc8a324e143d58"
+        ],
+        "recall": 1.0,
+        "hit": 1.0,
+        "mrr": 1.0
+      }
+    },
+    {
+      "q": "food",
+      "relevant": [
+        "3ffb1aa33c83470aa0bc8a324e143d58",
+        "0317b5cf2ded400482369e33d982b033",
+        "2ee880ce9f6a4d988e5ac67fc7284f3a",
+        "be57268bb77041cba07e6f52afbe1725",
+        "fac2558c19324f8f978bd44fc6062127",
+        "32370c0e24dd4699af625c99cc60ccbd"
+      ],
+      "keyword": {
+        "top": [
+          "2ee880ce9f6a4d988e5ac67fc7284f3a",
+          "32370c0e24dd4699af625c99cc60ccbd",
+          "593f9557ff6646deb835c9c304dc4986",
+          "fac2558c19324f8f978bd44fc6062127"
+        ],
+        "recall": 0.5,
+        "hit": 1.0,
+        "mrr": 1.0
+      },
+      "semantic": {
+        "top": [
+          "32370c0e24dd4699af625c99cc60ccbd",
+          "2ee880ce9f6a4d988e5ac67fc7284f3a",
+          "fac2558c19324f8f978bd44fc6062127",
+          "593f9557ff6646deb835c9c304dc4986",
+          "3ffb1aa33c83470aa0bc8a324e143d58"
+        ],
+        "recall": 0.6666666666666666,
+        "hit": 1.0,
+        "mrr": 1.0
+      },
+      "hybrid": {
+        "top": [
+          "32370c0e24dd4699af625c99cc60ccbd",
+          "2ee880ce9f6a4d988e5ac67fc7284f3a",
+          "fac2558c19324f8f978bd44fc6062127",
+          "593f9557ff6646deb835c9c304dc4986",
+          "3ffb1aa33c83470aa0bc8a324e143d58"
+        ],
+        "recall": 0.6666666666666666,
+        "hit": 1.0,
+        "mrr": 1.0
+      }
+    },
+    {
+      "q": "nature",
+      "relevant": [
+        "15765d8ee5924605b6b1b672327cc6b1"
+      ],
+      "keyword": {
+        "top": [
+          "05d9a636e2934a869e136f01df112177",
+          "15765d8ee5924605b6b1b672327cc6b1",
+          "cd76a06c7cf84447bb7ee2e35db49a96"
+        ],
+        "recall": 1.0,
+        "hit": 1.0,
+        "mrr": 0.5
+      },
+      "semantic": {
+        "top": [
+          "15765d8ee5924605b6b1b672327cc6b1",
+          "05d9a636e2934a869e136f01df112177",
+          "2ee880ce9f6a4d988e5ac67fc7284f3a",
+          "fac2558c19324f8f978bd44fc6062127",
+          "931d56fa84e4416fbc517450187c2440"
+        ],
+        "recall": 1.0,
+        "hit": 1.0,
+        "mrr": 1.0
+      },
+      "hybrid": {
+        "top": [
+          "15765d8ee5924605b6b1b672327cc6b1",
+          "05d9a636e2934a869e136f01df112177",
+          "cd76a06c7cf84447bb7ee2e35db49a96",
+          "2ee880ce9f6a4d988e5ac67fc7284f3a",
+          "fac2558c19324f8f978bd44fc6062127"
+        ],
+        "recall": 1.0,
+        "hit": 1.0,
+        "mrr": 1.0
+      }
+    },
+    {
+      "q": "girl",
+      "relevant": [
+        "0317b5cf2ded400482369e33d982b033",
+        "7e545b8eddd4490a9122870fb121a408",
+        "f8ba19de3c0d426896907abb591e2697",
+        "9b2894c356804fce8d88394c0fa8849c",
+        "be57268bb77041cba07e6f52afbe1725",
+        "593f9557ff6646deb835c9c304dc4986",
+        "3b0424fa7560416d96f05e542cbc139e",
+        "cd76a06c7cf84447bb7ee2e35db49a96",
+        "4771be1d92004974bbc00f3482af9a89",
+        "931d56fa84e4416fbc517450187c2440",
+        "a201cf0c2c804a649a50c18f8ca8a08b",
+        "05d9a636e2934a869e136f01df112177",
+        "d414679263d44f638c70ff2f766965a1",
+        "5728dfe9e9e746b795f0080fc2617075"
+      ],
+      "keyword": {
+        "top": [],
+        "recall": 0.0,
+        "hit": 0.0,
+        "mrr": 0.0
+      },
+      "semantic": {
+        "top": [
+          "593f9557ff6646deb835c9c304dc4986",
+          "cdffca9834c44cb09467ed75a242354b",
+          "7e545b8eddd4490a9122870fb121a408",
+          "4771be1d92004974bbc00f3482af9a89",
+          "15765d8ee5924605b6b1b672327cc6b1"
+        ],
+        "recall": 0.21428571428571427,
+        "hit": 1.0,
+        "mrr": 1.0
+      },
+      "hybrid": {
+        "top": [
+          "593f9557ff6646deb835c9c304dc4986",
+          "cdffca9834c44cb09467ed75a242354b",
+          "7e545b8eddd4490a9122870fb121a408",
+          "4771be1d92004974bbc00f3482af9a89",
+          "15765d8ee5924605b6b1b672327cc6b1"
+        ],
+        "recall": 0.21428571428571427,
+        "hit": 1.0,
+        "mrr": 1.0
+      }
+    },
+    {
+      "q": "water",
+      "relevant": [
+        "15765d8ee5924605b6b1b672327cc6b1",
+        "be57268bb77041cba07e6f52afbe1725",
+        "fac2558c19324f8f978bd44fc6062127"
+      ],
+      "keyword": {
+        "top": [
+          "15765d8ee5924605b6b1b672327cc6b1"
+        ],
+        "recall": 0.3333333333333333,
+        "hit": 1.0,
+        "mrr": 1.0
+      },
+      "semantic": {
+        "top": [
+          "15765d8ee5924605b6b1b672327cc6b1",
+          "32370c0e24dd4699af625c99cc60ccbd",
+          "fac2558c19324f8f978bd44fc6062127",
+          "593f9557ff6646deb835c9c304dc4986",
+          "3b0424fa7560416d96f05e542cbc139e"
+        ],
+        "recall": 0.6666666666666666,
+        "hit": 1.0,
+        "mrr": 1.0
+      },
+      "hybrid": {
+        "top": [
+          "15765d8ee5924605b6b1b672327cc6b1",
+          "32370c0e24dd4699af625c99cc60ccbd",
+          "fac2558c19324f8f978bd44fc6062127",
+          "593f9557ff6646deb835c9c304dc4986",
+          "3b0424fa7560416d96f05e542cbc139e"
+        ],
+        "recall": 0.6666666666666666,
+        "hit": 1.0,
+        "mrr": 1.0
+      }
+    },
+    {
+      "q": "thumbs up",
+      "relevant": [
+        "4d8425a04de14e03a9d0ee091d5dab9a",
+        "d414679263d44f638c70ff2f766965a1",
+        "cdffca9834c44cb09467ed75a242354b"
+      ],
+      "keyword": {
+        "top": [],
+        "recall": 0.0,
+        "hit": 0.0,
+        "mrr": 0.0
+      },
+      "semantic": {
+        "top": [
+          "d414679263d44f638c70ff2f766965a1",
+          "cdffca9834c44cb09467ed75a242354b",
+          "3b0424fa7560416d96f05e542cbc139e",
+          "a201cf0c2c804a649a50c18f8ca8a08b",
+          "05d9a636e2934a869e136f01df112177"
+        ],
+        "recall": 0.6666666666666666,
+        "hit": 1.0,
+        "mrr": 1.0
+      },
+      "hybrid": {
+        "top": [
+          "d414679263d44f638c70ff2f766965a1",
+          "cdffca9834c44cb09467ed75a242354b",
+          "3b0424fa7560416d96f05e542cbc139e",
+          "a201cf0c2c804a649a50c18f8ca8a08b",
+          "05d9a636e2934a869e136f01df112177"
+        ],
+        "recall": 0.6666666666666666,
+        "hit": 1.0,
+        "mrr": 1.0
+      }
+    },
+    {
+      "q": "face mask",
+      "relevant": [
+        "cdffca9834c44cb09467ed75a242354b"
+      ],
+      "keyword": {
+        "top": [
+          "0317b5cf2ded400482369e33d982b033",
+          "05d9a636e2934a869e136f01df112177",
+          "15765d8ee5924605b6b1b672327cc6b1",
+          "32370c0e24dd4699af625c99cc60ccbd",
+          "3b0424fa7560416d96f05e542cbc139e"
+        ],
+        "recall": 0.0,
+        "hit": 0.0,
+        "mrr": 0.06666666666666667
+      },
+      "semantic": {
+        "top": [
+          "cdffca9834c44cb09467ed75a242354b",
+          "931d56fa84e4416fbc517450187c2440",
+          "24f2d08149864cfcb21a8b4ce1f70833",
+          "15765d8ee5924605b6b1b672327cc6b1",
+          "3b0424fa7560416d96f05e542cbc139e"
+        ],
+        "recall": 1.0,
+        "hit": 1.0,
+        "mrr": 1.0
+      },
+      "hybrid": {
+        "top": [
+          "15765d8ee5924605b6b1b672327cc6b1",
+          "931d56fa84e4416fbc517450187c2440",
+          "cdffca9834c44cb09467ed75a242354b",
+          "3b0424fa7560416d96f05e542cbc139e",
+          "0317b5cf2ded400482369e33d982b033"
+        ],
+        "recall": 1.0,
+        "hit": 1.0,
+        "mrr": 0.3333333333333333
+      }
+    },
+    {
+      "q": "two girls smiling",
+      "relevant": [
+        "a201cf0c2c804a649a50c18f8ca8a08b",
+        "05d9a636e2934a869e136f01df112177",
+        "931d56fa84e4416fbc517450187c2440",
+        "593f9557ff6646deb835c9c304dc4986",
+        "9b2894c356804fce8d88394c0fa8849c",
+        "0317b5cf2ded400482369e33d982b033",
+        "7e545b8eddd4490a9122870fb121a408"
+      ],
+      "keyword": {
+        "top": [],
+        "recall": 0.0,
+        "hit": 0.0,
+        "mrr": 0.0
+      },
+      "semantic": {
+        "top": [
+          "3b0424fa7560416d96f05e542cbc139e",
+          "4771be1d92004974bbc00f3482af9a89",
+          "a201cf0c2c804a649a50c18f8ca8a08b",
+          "0317b5cf2ded400482369e33d982b033",
+          "05d9a636e2934a869e136f01df112177"
+        ],
+        "recall": 0.42857142857142855,
+        "hit": 1.0,
+        "mrr": 0.3333333333333333
+      },
+      "hybrid": {
+        "top": [
+          "3b0424fa7560416d96f05e542cbc139e",
+          "4771be1d92004974bbc00f3482af9a89",
+          "a201cf0c2c804a649a50c18f8ca8a08b",
+          "0317b5cf2ded400482369e33d982b033",
+          "05d9a636e2934a869e136f01df112177"
+        ],
+        "recall": 0.42857142857142855,
+        "hit": 1.0,
+        "mrr": 0.3333333333333333
+      }
+    },
+    {
+      "q": "books",
+      "relevant": [
+        "7e545b8eddd4490a9122870fb121a408"
+      ],
+      "keyword": {
+        "top": [
+          "7e545b8eddd4490a9122870fb121a408"
+        ],
+        "recall": 1.0,
+        "hit": 1.0,
+        "mrr": 1.0
+      },
+      "semantic": {
+        "top": [
+          "7e545b8eddd4490a9122870fb121a408",
+          "3b0424fa7560416d96f05e542cbc139e",
+          "2ee880ce9f6a4d988e5ac67fc7284f3a",
+          "931d56fa84e4416fbc517450187c2440",
+          "24f2d08149864cfcb21a8b4ce1f70833"
+        ],
+        "recall": 1.0,
+        "hit": 1.0,
+        "mrr": 1.0
+      },
+      "hybrid": {
+        "top": [
+          "7e545b8eddd4490a9122870fb121a408",
+          "3b0424fa7560416d96f05e542cbc139e",
+          "2ee880ce9f6a4d988e5ac67fc7284f3a",
+          "931d56fa84e4416fbc517450187c2440",
+          "24f2d08149864cfcb21a8b4ce1f70833"
+        ],
+        "recall": 1.0,
+        "hit": 1.0,
+        "mrr": 1.0
+      }
+    },
+    {
+      "q": "male wearing sunglasses",
+      "relevant": [
+        "7e545b8eddd4490a9122870fb121a408",
+        "f8ba19de3c0d426896907abb591e2697"
+      ],
+      "keyword": {
+        "top": [
+          "cd76a06c7cf84447bb7ee2e35db49a96",
+          "f8ba19de3c0d426896907abb591e2697",
+          "2ee880ce9f6a4d988e5ac67fc7284f3a",
+          "32370c0e24dd4699af625c99cc60ccbd",
+          "3b0424fa7560416d96f05e542cbc139e"
+        ],
+        "recall": 0.5,
+        "hit": 1.0,
+        "mrr": 0.5
+      },
+      "semantic": {
+        "top": [
+          "f8ba19de3c0d426896907abb591e2697",
+          "ac22a7b499e046a289575672eb237632",
+          "4d8425a04de14e03a9d0ee091d5dab9a",
+          "7e545b8eddd4490a9122870fb121a408",
+          "be57268bb77041cba07e6f52afbe1725"
+        ],
+        "recall": 1.0,
+        "hit": 1.0,
+        "mrr": 1.0
+      },
+      "hybrid": {
+        "top": [
+          "f8ba19de3c0d426896907abb591e2697",
+          "4d8425a04de14e03a9d0ee091d5dab9a",
+          "ac22a7b499e046a289575672eb237632",
+          "cd76a06c7cf84447bb7ee2e35db49a96",
+          "7e545b8eddd4490a9122870fb121a408"
+        ],
+        "recall": 1.0,
+        "hit": 1.0,
+        "mrr": 1.0
+      }
+    },
+    {
+      "q": "mirror",
+      "relevant": [
+        "5728dfe9e9e746b795f0080fc2617075"
+      ],
+      "keyword": {
+        "top": [],
+        "recall": 0.0,
+        "hit": 0.0,
+        "mrr": 0.0
+      },
+      "semantic": {
+        "top": [
+          "cdffca9834c44cb09467ed75a242354b",
+          "7e545b8eddd4490a9122870fb121a408",
+          "4771be1d92004974bbc00f3482af9a89",
+          "ac22a7b499e046a289575672eb237632",
+          "0317b5cf2ded400482369e33d982b033"
+        ],
+        "recall": 0.0,
+        "hit": 0.0,
+        "mrr": 0.08333333333333333
+      },
+      "hybrid": {
+        "top": [
+          "cdffca9834c44cb09467ed75a242354b",
+          "7e545b8eddd4490a9122870fb121a408",
+          "4771be1d92004974bbc00f3482af9a89",
+          "ac22a7b499e046a289575672eb237632",
+          "0317b5cf2ded400482369e33d982b033"
+        ],
+        "recall": 0.0,
+        "hit": 0.0,
+        "mrr": 0.08333333333333333
+      }
+    },
+    {
+      "q": "striped shirt",
+      "relevant": [
+        "15765d8ee5924605b6b1b672327cc6b1",
+        "5728dfe9e9e746b795f0080fc2617075",
+        "4771be1d92004974bbc00f3482af9a89",
+        "931d56fa84e4416fbc517450187c2440",
+        "0317b5cf2ded400482369e33d982b033"
+      ],
+      "keyword": {
+        "top": [
+          "32370c0e24dd4699af625c99cc60ccbd",
+          "5728dfe9e9e746b795f0080fc2617075",
+          "be57268bb77041cba07e6f52afbe1725",
+          "cd76a06c7cf84447bb7ee2e35db49a96",
+          "f8ba19de3c0d426896907abb591e2697"
+        ],
+        "recall": 0.2,
+        "hit": 1.0,
+        "mrr": 0.5
+      },
+      "semantic": {
+        "top": [
+          "5728dfe9e9e746b795f0080fc2617075",
+          "15765d8ee5924605b6b1b672327cc6b1",
+          "4d8425a04de14e03a9d0ee091d5dab9a",
+          "32370c0e24dd4699af625c99cc60ccbd",
+          "3ffb1aa33c83470aa0bc8a324e143d58"
+        ],
+        "recall": 0.4,
+        "hit": 1.0,
+        "mrr": 1.0
+      },
+      "hybrid": {
+        "top": [
+          "5728dfe9e9e746b795f0080fc2617075",
+          "32370c0e24dd4699af625c99cc60ccbd",
+          "f8ba19de3c0d426896907abb591e2697",
+          "be57268bb77041cba07e6f52afbe1725",
+          "cd76a06c7cf84447bb7ee2e35db49a96"
+        ],
+        "recall": 0.2,
+        "hit": 1.0,
+        "mrr": 1.0
+      }
+    },
+    {
+      "q": "bakery",
+      "relevant": [
+        "2ee880ce9f6a4d988e5ac67fc7284f3a",
+        "fac2558c19324f8f978bd44fc6062127",
+        "32370c0e24dd4699af625c99cc60ccbd"
+      ],
+      "keyword": {
+        "top": [],
+        "recall": 0.0,
+        "hit": 0.0,
+        "mrr": 0.0
+      },
+      "semantic": {
+        "top": [
+          "2ee880ce9f6a4d988e5ac67fc7284f3a",
+          "fac2558c19324f8f978bd44fc6062127",
+          "32370c0e24dd4699af625c99cc60ccbd",
+          "3ffb1aa33c83470aa0bc8a324e143d58",
+          "593f9557ff6646deb835c9c304dc4986"
+        ],
+        "recall": 1.0,
+        "hit": 1.0,
+        "mrr": 1.0
+      },
+      "hybrid": {
+        "top": [
+          "2ee880ce9f6a4d988e5ac67fc7284f3a",
+          "fac2558c19324f8f978bd44fc6062127",
+          "32370c0e24dd4699af625c99cc60ccbd",
+          "3ffb1aa33c83470aa0bc8a324e143d58",
+          "593f9557ff6646deb835c9c304dc4986"
+        ],
+        "recall": 1.0,
+        "hit": 1.0,
+        "mrr": 1.0
+      }
+    }
+  ]
+}

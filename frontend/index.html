@@ -1,0 +1,179 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Find My Photos</title>
+  <meta name="description" content="Add event photos, add a selfie, and find every photo you appear in. A serverless demo on AWS Lambda.">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%232a4bff'/%3E%3Ccircle cx='16' cy='16' r='5.5' fill='none' stroke='white' stroke-width='3'/%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Figtree:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="wrap">
+    <header class="top">
+      <a class="brand" href="#top" aria-label="Find My Photos, back to top">
+        <svg class="logo" viewBox="0 0 32 32" aria-hidden="true"><path d="M4 11V6a2 2 0 0 1 2-2h5M21 4h5a2 2 0 0 1 2 2v5M28 21v5a2 2 0 0 1-2 2h-5M11 28H6a2 2 0 0 1-2-2v-5" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"/><circle cx="16" cy="16" r="4.5" fill="currentColor"/></svg>
+        <span>Find My Photos</span>
+      </a>
+      <nav class="top-right" aria-label="Page">
+        <span class="pill" id="conn" data-state="checking" role="status">Connecting to AWS…</span>
+        <a class="link" href="#how">How it works</a>
+      </nav>
+    </header>
+
+    <section class="hero" id="top">
+      <h1>Find yourself in the event album.</h1>
+      <p class="lead">Add the photos from an event, then add one selfie. Serverless functions on AWS find every photo you appear in.</p>
+    </section>
+
+    <main>
+      <div class="steps">
+        <section class="step" aria-labelledby="step1">
+          <div class="step-head"><span class="badge" aria-hidden="true">1</span><h2 id="step1">Add event photos</h2></div>
+          <p class="hint">Each photo is saved to Amazon S3. A Lambda function then finds every face in it.</p>
+          <label class="drop" id="drop">
+            <input class="sr-only" type="file" id="upload" accept="image/jpeg,image/png" multiple>
+            <svg class="drop-icon" viewBox="0 0 48 48" aria-hidden="true"><path d="M24 32V10m0 0-9 9m9-9 9 9M8 34v4a2 2 0 0 0 2 2h28a2 2 0 0 0 2-2v-4" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <strong>Drop photos here</strong>
+            <span>or click to choose them. JPEG and PNG work.</span>
+          </label>
+          <div class="progress" id="uploadProgress" hidden>
+            <div class="bar" role="progressbar" aria-label="Upload progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="uploadBarBox"><i id="uploadBar"></i></div>
+            <p id="uploadProgressText" class="muted"></p>
+          </div>
+          <p class="note" id="uploadNote" role="status" aria-live="polite"></p>
+        </section>
+
+        <section class="step" aria-labelledby="step2">
+          <div class="step-head"><span class="badge" aria-hidden="true">2</span><h2 id="step2">Find your photos</h2></div>
+          <p class="hint">Add a clear, well-lit, front-facing selfie of just you. We compare it with every face in the album.</p>
+          <div class="finder">
+            <label class="viewfinder" id="vf" data-state="idle">
+              <input class="sr-only" type="file" id="selfie" accept="image/*">
+              <span class="c tl"></span><span class="c tr"></span><span class="c bl"></span><span class="c br"></span>
+              <span class="scan" aria-hidden="true"></span>
+              <span class="vf-prompt">
+                <svg viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="18" r="8" fill="none" stroke="currentColor" stroke-width="3"/><path d="M8 42c2-9 8-13 16-13s14 4 16 13" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></svg>
+                <span>Add a selfie</span>
+              </span>
+            </label>
+            <div class="finder-side">
+              <p class="finder-status" id="finderStatus" data-state="idle" role="status" aria-live="polite">Click the frame or drop a selfie into it.</p>
+              <p class="finder-note">Your selfie is used for this search only. It is never saved.</p>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <section class="step describe" aria-labelledby="describeTitle">
+        <div class="step-head"><span class="badge" aria-hidden="true">3</span><h2 id="describeTitle">Or describe the photo</h2></div>
+        <p class="hint">Search by what is in the picture, like “a birthday cake” or “people laughing outdoors”. The text and every photo are turned into embeddings, and the closest photos win.</p>
+        <form class="describe-form" id="describeForm">
+          <svg class="describe-icon" viewBox="0 0 24 24" aria-hidden="true">
+            <circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="currentColor" stroke-width="2.5"/>
+            <path d="M15.5 15.5 20 20" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+          </svg>
+          <label class="sr-only" for="describeInput">Describe the photo you want</label>
+          <input type="text" id="describeInput" maxlength="200" placeholder="e.g. group photo on stage" autocomplete="off">
+          <button class="btn" type="submit" id="describeBtn">Search</button>
+        </form>
+        <p class="note" id="describeNote" role="status" aria-live="polite"></p>
+      </section>
+
+      <section class="results" id="results" aria-labelledby="resultsTitle" hidden>
+        <h2 id="resultsTitle"></h2>
+        <p class="muted" id="resultsMeta"></p>
+        <div class="match-grid" id="resultsGrid"></div>
+      </section>
+
+      <div class="board">
+        <section class="album" aria-labelledby="albumTitle">
+          <div class="album-head">
+            <div>
+              <h2 id="albumTitle">Event album</h2>
+              <p class="muted" id="albumStats"></p>
+            </div>
+            <button class="btn ghost small" type="button" id="refresh">Refresh</button>
+          </div>
+          <p class="muted" id="albumLoading">Loading the album…</p>
+          <div class="grid" id="gallery"></div>
+          <div class="empty" id="empty" hidden>
+            <strong>No photos yet</strong>
+            <span>Drop some event photos into step 1 to start the album.</span>
+          </div>
+        </section>
+
+        <aside class="log" aria-labelledby="logTitle">
+          <h2 id="logTitle">Live activity</h2>
+          <p>Each AWS function reports here as it runs.</p>
+          <ul class="feed" id="feed">
+            <li class="feed-empty" id="feedEmpty">Nothing yet. Add a photo or a selfie and the functions will show up here.</li>
+          </ul>
+        </aside>
+      </div>
+
+      <section class="how" id="how" aria-labelledby="howTitle">
+        <h2 id="howTitle">How it works behind the scenes</h2>
+        <p class="lead">There are no servers to manage. Seven small Lambda functions each do one job, and AWS runs them only when something happens.</p>
+
+        <div class="flows">
+          <div class="flow-card">
+            <h3>When you add a photo</h3>
+            <ol class="flow">
+              <li data-kind="client"><span class="tag">Browser</span><strong>Asks for an upload link</strong><p>Calls <code>POST /upload-url</code> on API Gateway for each photo.</p></li>
+              <li data-kind="lambda"><span class="tag">Lambda</span><strong>GetUploadUrl</strong><p>Triggered by API Gateway. Returns a signed, short-lived link to a private S3 bucket.</p></li>
+              <li data-kind="aws"><span class="tag">S3</span><strong>The photo is stored</strong><p>Your browser uploads straight to S3. The new file raises an event.</p></li>
+              <li data-kind="lambda"><span class="tag">Lambda</span><strong>IndexPhoto</strong><p>Triggered by that S3 event. Asks Rekognition to find and remember every face, then saves a record in DynamoDB.</p></li>
+              <li data-kind="lambda"><span class="tag">Lambda</span><strong>Thumbnail</strong><p>Triggered by the new DynamoDB record through its stream. Saves a small preview back to S3.</p></li>
+              <li data-kind="lambda"><span class="tag">Lambda</span><strong>EmbedPhoto</strong><p>Triggered when the thumbnail is saved. Turns the photo into an embedding with Bedrock Titan and tags it with Rekognition labels.</p></li>
+              <li data-kind="lambda"><span class="tag">Lambda</span><strong>ListPhotos</strong><p>Triggered by API Gateway. Gives this page the album with signed thumbnail links.</p></li>
+            </ol>
+          </div>
+
+          <div class="flow-card">
+            <h3>When you add a selfie</h3>
+            <ol class="flow">
+              <li data-kind="client"><span class="tag">Browser</span><strong>Sends the selfie</strong><p>Shrinks the image and calls <code>POST /search</code> on API Gateway.</p></li>
+              <li data-kind="lambda"><span class="tag">Lambda</span><strong>FindMyPhotos</strong><p>Triggered by API Gateway. Handles the selfie in memory only, so it is never stored.</p></li>
+              <li data-kind="aws"><span class="tag">Rekognition</span><strong>Compares faces</strong><p>Matches your face against every face indexed from the album photos.</p></li>
+              <li data-kind="aws"><span class="tag">DynamoDB and S3</span><strong>Looks up the matches</strong><p>FindMyPhotos fetches each matching photo's record and replies with signed, short-lived links.</p></li>
+            </ol>
+
+            <h3>When you describe a photo</h3>
+            <ol class="flow">
+              <li data-kind="client"><span class="tag">Browser</span><strong>Sends your description</strong><p>Calls <code>POST /search-text</code> on API Gateway.</p></li>
+              <li data-kind="lambda"><span class="tag">Lambda</span><strong>TextSearch</strong><p>Embeds the text with Bedrock Titan, compares it with every stored photo embedding, and returns the closest photos with signed links.</p></li>
+            </ol>
+
+            <h3 class="spaced">The seven functions</h3>
+            <div class="fn-list">
+              <div class="fn-row"><strong>GetUploadUrl</strong><span>API Gateway: POST /upload-url</span></div>
+              <div class="fn-row"><strong>IndexPhoto</strong><span>S3: new file in originals/</span></div>
+              <div class="fn-row"><strong>Thumbnail</strong><span>DynamoDB Stream: new record</span></div>
+              <div class="fn-row"><strong>EmbedPhoto</strong><span>DynamoDB Stream: thumbnail saved</span></div>
+              <div class="fn-row"><strong>ListPhotos</strong><span>API Gateway: GET /photos</span></div>
+              <div class="fn-row"><strong>TextSearch</strong><span>API Gateway: POST /search-text</span></div>
+              <div class="fn-row"><strong>FindMyPhotos</strong><span>API Gateway: POST /search</span></div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="foot">
+      <p>Built for a serverless architecture and microservices course. Photos stay in a private S3 bucket and are shared only through short-lived signed links.</p>
+    </footer>
+  </div>
+
+  <dialog id="lightbox" aria-label="Photo preview">
+    <button class="close btn small" type="button" id="lightboxClose">Close</button>
+    <img id="lightboxImg" alt="Full-size photo">
+  </dialog>
+
+  <script src="config.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

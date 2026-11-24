@@ -1,0 +1,33 @@
+# --- AWS SAM Build & Deployment Artifacts ---
+.aws-sam/
+packaged.yaml
+samconfig.toml
+
+# --- Archives & Zips ---
+*.zip
+
+# --- Frontend Runtime Config (contains your deployed API Gateway URL) ---
+frontend/config.js
+.env
+.env.*
+
+# --- Python Virtual Environment & Cache ---
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+.pytest_cache/
+
+# --- Local Test Photos / Eval Outputs ---
+*.jpg
+*.jpeg
+*.png
+*.webp
+
+# --- OS & Editor Files ---
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
